@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Casino Premium</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        height: 100vh;
+        overflow: hidden;
+        position: relative;
+        background: #1a0e00;
+      }
+
+      .background-video {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 1;
+      }
+
+      .video-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        z-index: 2;
+      }
+
+      .particles-container {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 3;
+        overflow: hidden;
+      }
+
+      .particle {
+        position: absolute;
+        border-radius: 50%;
+        pointer-events: none;
+        will-change: transform, opacity;
+        animation: float linear infinite;
+      }
+
+      .particle.glow {
+        box-shadow: 0 0 15px currentColor, 0 0 30px currentColor;
+      }
+
+      .particle.sparkle {
+        animation: sparkle linear infinite;
+      }
+
+      .particle.drift {
+        animation: drift linear infinite;
+      }
+
+      @keyframes float {
+        0% {
+          transform: translateY(100vh) translateX(0px) rotate(0deg);
+          opacity: 0;
+        }
+        10% {
+          opacity: 0.8;
+        }
+        90% {
+          opacity: 0.8;
+        }
+        100% {
+          transform: translateY(-10vh) translateX(50px) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes sparkle {
+        0% {
+          transform: translateY(100vh) scale(0.5) rotate(0deg);
+          opacity: 0;
+        }
+        50% {
+          transform: translateY(50vh) scale(1.2) rotate(180deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translateY(-10vh) scale(0.3) rotate(360deg);
+          opacity: 0;
+        }
+      }
+
+      @keyframes drift {
+        0% {
+          transform: translateX(-10vw) translateY(100vh) rotate(0deg);
+          opacity: 0;
+        }
+        25% {
+          opacity: 0.9;
+        }
+        75% {
+          opacity: 0.9;
+        }
+        100% {
+          transform: translateX(10vw) translateY(-10vh) rotate(720deg);
+          opacity: 0;
+        }
+      }
+
+      .casino-container {
+        position: absolute;
+        top: 49%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        z-index: 4;
+        margin: 5px;
+        border: 3px solid #d4af37;
+        border-radius: 20px;
+        padding: 20px;
+        text-align: center;
+        box-shadow: 0 0 40px rgba(212, 175, 55, 0.6),
+          0 0 80px rgba(184, 134, 11, 0.3),
+          inset 0 0 40px rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(5px);
+        width: min(90vw, 500px);
+        max-height: 590px;
+        animation: glow-pulse 2s ease-in-out infinite alternate;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      @keyframes glow-pulse {
+        0% {
+          box-shadow: 0 0 40px rgba(212, 175, 55, 0.6),
+            0 0 80px rgba(184, 134, 11, 0.3),
+            inset 0 0 40px rgba(255, 255, 255, 0.1);
+        }
+        100% {
+          box-shadow: 0 0 60px rgba(212, 175, 55, 0.9),
+            0 0 120px rgba(184, 134, 11, 0.5), 0 0 160px rgba(255, 215, 0, 0.3),
+            inset 0 0 40px rgba(255, 255, 255, 0.2);
+        }
+      }
+
+      .casino-title {
+        color: #d4af37;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        font-weight: bold;
+        margin-bottom: 20px;
+        text-shadow: 0 0 10px #d4af37, 0 0 20px #d4af37, 0 0 30px #d4af37;
+        animation: text-glow 1.5s ease-in-out infinite alternate;
+        font-family: "Arial Black", sans-serif;
+      }
+
+      @keyframes text-glow {
+        0% {
+          text-shadow: 0 0 10px #d4af37, 0 0 20px #d4af37, 0 0 30px #d4af37;
+        }
+        100% {
+          text-shadow: 0 0 20px #d4af37, 0 0 30px #d4af37, 0 0 40px #d4af37,
+            0 0 50px #ffd700;
+        }
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin: 25px 0;
+        width: 100%;
+      }
+
+      .feature {
+        background: linear-gradient(
+          135deg,
+          rgba(139, 69, 19, 0.8),
+          rgba(160, 82, 45, 0.8)
+        );
+        border: 2px solid #d4af37;
+        border-radius: 15px;
+        padding: 15px 10px;
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        color: #fff;
+        line-height: 1.3;
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+      }
+
+      .feature:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(212, 175, 55, 0.3);
+      }
+
+      .emoji {
+        font-size: clamp(1.5em, 3vw, 2em);
+        margin-bottom: 8px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+      }
+
+      .payment-info {
+        background: linear-gradient(
+          135deg,
+          rgba(0, 0, 0, 0.8),
+          rgba(139, 69, 19, 0.6)
+        );
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        border: 2px solid #d4af37;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        width: 100%;
+      }
+
+      .payment-options {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .payment-badge {
+        background: linear-gradient(45deg, #8b4513, #a0522d);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: clamp(0.8rem, 2vw, 0.9rem);
+        font-weight: bold;
+        box-shadow: 0 4px 15px rgba(139, 69, 19, 0.4);
+        border: 1px solid #d4af37;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+      }
+
+      .whatsapp-button {
+        display: inline-flex;
+        align-items: center;
+        background: linear-gradient(45deg, #0f4c3a, #1e6b5a, #2d8a70, #0f4c3a);
+        color: white;
+        padding: 15px 25px;
+        border-radius: 50px;
+        text-decoration: none;
+        font-weight: bold;
+        font-size: clamp(1.5rem, 5vw, 2rem);
+        box-shadow: 0 8px 25px rgba(15, 76, 58, 0.6),
+          inset 0 2px 4px rgba(255, 255, 255, 0.1);
+        transition: all 0.3s ease;
+        animation: pulse 2s infinite;
+        position: relative;
+        overflow: hidden;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .whatsapp-button::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.4),
+          transparent
+        );
+        transition: all 0.5s;
+      }
+
+      .whatsapp-button:hover::before {
+        left: 100%;
+      }
+
+      .whatsapp-button:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 12px 35px rgba(15, 76, 58, 0.8),
+          inset 0 2px 6px rgba(255, 255, 255, 0.15);
+      }
+
+      .whatsapp-button:active {
+        transform: translateY(0px) scale(0.95);
+        box-shadow: 0 5px 15px rgba(15, 76, 58, 0.6),
+          inset 0 2px 4px rgba(0, 0, 0, 0.2);
+      }
+
+      .whatsapp-icon {
+        width: 28px;
+        height: 28px;
+        margin-right: 12px;
+        filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+      }
+
+      .button-text {
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        letter-spacing: 0.5px;
+      }
+
+      @keyframes pulse {
+        0% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.05);
+        }
+        100% {
+          transform: scale(1);
+        }
+      }
+
+      .whatsapp-button::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: all 0.6s ease;
+      }
+
+      .whatsapp-button:active::after {
+        width: 300px;
+        height: 300px;
+      }
+
+      /* Brillo adicional */
+      .whatsapp-button {
+        background: linear-gradient(45deg, #0f4c3a, #1e6b5a, #2d8a70, #0f4c3a);
+        background-size: 200% 200%;
+        animation: pulse 2s infinite, gradientShift 3s ease-in-out infinite;
+      }
+
+      @keyframes gradientShift {
+        0%,
+        100% {
+          background-position: 0% 50%;
+        }
+        50% {
+          background-position: 100% 50%;
+        }
+      }
+
+      .footer-text {
+        color: #d4af37;
+        font-size: clamp(0.8rem, 2vw, 1rem);
+        margin-top: 15px;
+        line-height: 1.4;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+        opacity: 0.9;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 768px) {
+        .casino-container {
+          width: 95vw;
+          padding: 20px;
+          max-height: 95vh;
+        }
+
+        .casino-title {
+          margin-bottom: 10px;
+        }
+
+        .features {
+          gap: 10px;
+          margin: 20px 0;
+        }
+
+        .feature {
+          padding: 12px 8px;
+          min-height: 70px;
+        }
+
+        .payment-info {
+          padding: 15px;
+          margin: 15px 0;
+        }
+
+        .payment-options {
+          gap: 8px;
+        }
+
+        .payment-badge {
+          padding: 6px 12px;
+          font-size: 0.8rem;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .casino-container {
+          width: 98vw;
+          padding: 15px;
+        }
+
+        .features {
+          gap: 8px;
+          margin: 15px 0;
+        }
+
+        .feature {
+          padding: 10px 6px;
+          min-height: 60px;
+          font-size: 0.75rem;
+        }
+
+        .emoji {
+          font-size: 1.3em;
+          margin-bottom: 5px;
+        }
+
+        .payment-info {
+          padding: 12px;
+        }
+      }
+
+      @media (max-height: 600px) {
+        .casino-container {
+          max-height: 98vh;
+          padding: 15px;
+        }
+
+        .casino-title {
+          margin-bottom: 8px;
+        }
+
+        .features {
+          margin: 15px 0;
+        }
+
+        .payment-info {
+          margin: 15px 0;
+        }
+      }
+
+      /* Landscape orientation on mobile */
+      @media screen and (max-height: 500px) and (orientation: landscape) {
+        .casino-container {
+          transform: translate(-50%, -50%) scale(0.9);
+          max-height: 95vh;
+          overflow-y: auto;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <video
+      class="background-video"
+      autoplay
+      loop
+      muted
+      playsinline
+      id="backgroundVideo"
+    >
+      <source src="./204933-925994338_small.mp4" type="video/mp4" />
+    </video>
+
+    <div class="video-overlay"></div>
+    <div class="particles-container" id="particlesContainer"></div>
+
+    <div class="casino-container">
+      <h1 class="casino-title">🍀🍀 RED CASINO 🍀🍀</h1>
+
+      <div class="features">
+        <div class="feature">
+          <div class="emoji">🎲</div>
+          <div>Juegos en Vivo</div>
+        </div>
+        <div class="feature">
+          <div class="emoji">💰</div>
+          <div>Pagos Rápidos</div>
+        </div>
+        <div class="feature">
+          <div class="emoji">🏆</div>
+          <div>Bonos Diarios</div>
+        </div>
+      </div>
+
+      <a class="whatsapp-button" onclick="openWhatsApp()">
+        <svg
+          class="whatsapp-icon"
+          viewBox="0 0 48 48"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98c-0.001,0,0,0,0,0h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303z"
+            fill="#fff"
+          ></path>
+          <path
+            d="M4.868,43.803c-0.132,0-0.26-0.052-0.355-0.148c-0.125-0.127-0.174-0.312-0.127-0.483l2.639-9.636c-1.636-2.906-2.499-6.206-2.497-9.556C4.532,13.238,13.273,4.5,24.014,4.5c5.21,0.002,10.105,2.031,13.784,5.713c3.679,3.683,5.704,8.577,5.702,13.781c-0.004,10.741-8.746,19.48-19.486,19.48c-3.189-0.001-6.344-0.788-9.144-2.277l-9.875,2.589C4.953,43.798,4.911,43.803,4.868,43.803z"
+            fill="#fff"
+          ></path>
+          <path
+            d="M24.014,5c5.079,0.002,9.845,1.979,13.43,5.566c3.584,3.588,5.558,8.356,5.556,13.428c-0.004,10.465-8.522,18.98-18.986,18.98h-0.008c-3.177-0.001-6.3-0.798-9.073-2.311L4.868,43.303l2.694-9.835C5.9,30.59,5.026,27.324,5.027,23.979C5.032,13.514,13.548,5,24.014,5 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974C24.014,42.974,24.014,42.974,24.014,42.974 M24.014,4C24.014,4,24.014,4,24.014,4C12.998,4,4.032,12.962,4.027,23.979c-0.001,3.367,0.849,6.685,2.461,9.622l-2.585,9.439c-0.094,0.345,0.002,0.713,0.254,0.967c0.19,0.192,0.447,0.297,0.711,0.297c0.085,0,0.17-0.011,0.254-0.033l9.687-2.54c2.828,1.468,5.998,2.243,9.197,2.244c11.024,0,19.99-8.963,19.995-19.98c0.002-5.339-2.075-10.359-5.848-14.135C34.378,6.083,29.357,4.002,24.014,4L24.014,4z"
+            fill="#cfd8dc"
+          ></path>
+          <path
+            d="M35.176,12.832c-2.98-2.982-6.941-4.625-11.157-4.626c-8.704,0-15.783,7.076-15.787,15.774c-0.001,2.981,0.833,5.883,2.413,8.396l0.376,0.597l-1.595,5.821l5.973-1.566l0.577,0.342c2.422,1.438,5.2,2.198,8.032,2.199h0.006c8.698,0,15.777-7.077,15.78-15.776C39.795,19.778,38.156,15.814,35.176,12.832z"
+            fill="#40c351"
+          ></path>
+          <path
+            clip-rule="evenodd"
+            d="M19.268,16.045c-0.355-0.79-0.729-0.806-1.068-0.82c-0.277-0.012-0.593-0.011-0.909-0.011c-0.316,0-0.83,0.119-1.265,0.594c-0.435,0.475-1.661,1.622-1.661,3.956c0,2.334,1.7,4.59,1.937,4.906c0.237,0.316,3.282,5.259,8.104,7.161c4.007,1.58,4.823,1.266,5.693,1.187c0.87-0.079,2.807-1.147,3.202-2.255c0.395-1.108,0.395-2.057,0.277-2.255c-0.119-0.198-0.435-0.316-0.909-0.554s-2.807-1.385-3.242-1.543c-0.435-0.158-0.751-0.237-1.068,0.238c-0.316,0.474-1.225,1.543-1.502,1.859c-0.277,0.317-0.554,0.357-1.028,0.119c-0.474-0.238-2.002-0.738-3.815-2.354c-1.41-1.257-2.362-2.81-2.639-3.285c-0.277-0.474-0.03-0.731,0.208-0.968c0.213-0.213,0.474-0.554,0.712-0.831c0.237-0.277,0.316-0.475,0.474-0.791c0.158-0.317,0.079-0.594-0.04-0.831C20.612,19.329,19.69,16.983,19.268,16.045z"
+            fill-rule="evenodd"
+            fill="#fff"
+          ></path>
+        </svg>
+        <span class="button-text">¡Juega ya!</span>
+      </a>
+
+      <div class="payment-info">
+        <div class="payment-options">
+          <span class="payment-badge">
+            <img src="./mp.png" alt="Logo mercado pago" width="15%" />
+            Mercado Pago
+          </span>
+          <span class="payment-badge">🏦 Transferencia</span>
+          <span class="payment-badge">💳 Tarjetas</span>
+        </div>
+      </div>
+
+      <p class="footer-text">🔒 Juego Responsable • +18 años • Atención 24/7</p>
+    </div>
+
+    <script>
+      class ParticleSystem {
+        constructor() {
+          this.container = document.getElementById("particlesContainer");
+          // Colores inspirados en el casino: dorados, cobrizos, marrones
+          this.colors = [
+            "#d4af37", // oro
+            "#ffd700", // dorado
+            "#daa520", // dorado oscuro
+            "#b8860b", // dorado oscuro
+            "#cd853f", // peru
+            "#a0522d", // sienna
+            "#8b4513", // saddlebrown
+            "#ff8c00", // darkorange
+            "#ffa500", // orange
+            "#ffb347", // peach
+            "#f4a460", // sandy brown
+            "#deb887", // burlywood
+          ];
+          this.particleTypes = ["glow", "sparkle", "drift"];
+          this.particleCount = this.getParticleCount();
+          this.particles = [];
+          this.maxParticles = this.getMaxParticles();
+          this.init();
+        }
+
+        getParticleCount() {
+          const width = window.innerWidth;
+          if (width < 480) return 8;
+          if (width < 768) return 12;
+          return 16;
+        }
+
+        getMaxParticles() {
+          const width = window.innerWidth;
+          if (width < 480) return 20;
+          if (width < 768) return 30;
+          return 40;
+        }
+
+        init() {
+          this.createInitialParticles();
+          this.startParticleGeneration();
+          this.handleResize();
+        }
+
+        handleResize() {
+          window.addEventListener("resize", () => {
+            this.particleCount = this.getParticleCount();
+            this.maxParticles = this.getMaxParticles();
+            this.cleanupParticles();
+          });
+        }
+
+        cleanupParticles() {
+          // Limpia partículas si hay demasiadas
+          if (this.particles.length > this.maxParticles) {
+            const excess = this.particles.length - this.maxParticles;
+            for (let i = 0; i < excess; i++) {
+              const particle = this.particles.shift();
+              if (particle && particle.parentNode) {
+                particle.parentNode.removeChild(particle);
+              }
+            }
+          }
+        }
+
+        createInitialParticles() {
+          for (let i = 0; i < this.particleCount; i++) {
+            setTimeout(() => {
+              this.createParticle();
+            }, i * 150);
+          }
+        }
+
+        startParticleGeneration() {
+          const interval = window.innerWidth < 768 ? 500 : 400;
+          const specialInterval = window.innerWidth < 768 ? 2000 : 1500;
+
+          setInterval(() => {
+            if (this.particles.length < this.maxParticles) {
+              this.createParticle();
+            }
+          }, interval);
+
+          setInterval(() => {
+            if (this.particles.length < this.maxParticles) {
+              this.createSpecialParticle();
+            }
+          }, specialInterval);
+        }
+
+        createParticle() {
+          const particle = document.createElement("div");
+          particle.className = "particle";
+
+          const size = Math.random() * (window.innerWidth < 768 ? 5 : 7) + 3;
+          const color =
+            this.colors[Math.floor(Math.random() * this.colors.length)];
+          const type =
+            this.particleTypes[
+              Math.floor(Math.random() * this.particleTypes.length)
+            ];
+          const duration = Math.random() * 6 + 6;
+          const startX = Math.random() * (window.innerWidth + 100) - 50;
+
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.backgroundColor = color;
+          particle.style.left = `${startX}px`;
+          particle.style.animationDuration = `${duration}s`;
+          particle.style.opacity = Math.random() * 0.4 + 0.3;
+          particle.classList.add(type);
+
+          if (Math.random() > 0.6) {
+            particle.style.boxShadow = `0 0 ${size * 3}px ${color}`;
+          }
+
+          this.container.appendChild(particle);
+          this.particles.push(particle);
+
+          setTimeout(() => {
+            if (particle.parentNode) {
+              particle.parentNode.removeChild(particle);
+              const index = this.particles.indexOf(particle);
+              if (index > -1) {
+                this.particles.splice(index, 1);
+              }
+            }
+          }, duration * 1000);
+        }
+
+        createSpecialParticle() {
+          const particle = document.createElement("div");
+          particle.className = "particle glow";
+
+          const size = Math.random() * (window.innerWidth < 768 ? 10 : 14) + 8;
+          const specialColors = ["#d4af37", "#ffd700", "#daa520"];
+          const color =
+            specialColors[Math.floor(Math.random() * specialColors.length)];
+          const duration = Math.random() * 4 + 8;
+          const startX = Math.random() * (window.innerWidth + 100) - 50;
+
+          particle.style.width = `${size}px`;
+          particle.style.height = `${size}px`;
+          particle.style.backgroundColor = color;
+          particle.style.left = `${startX}px`;
+          particle.style.animationDuration = `${duration}s`;
+          particle.style.opacity = Math.random() * 0.3 + 0.5;
+          particle.style.boxShadow = `
+            0 0 ${size * 2}px ${color},
+            0 0 ${size * 4}px ${color},
+            0 0 ${size * 6}px ${color}
+          `;
+
+          this.container.appendChild(particle);
+          this.particles.push(particle);
+
+          setTimeout(() => {
+            if (particle.parentNode) {
+              particle.parentNode.removeChild(particle);
+              const index = this.particles.indexOf(particle);
+              if (index > -1) {
+                this.particles.splice(index, 1);
+              }
+            }
+          }, duration * 1000);
+        }
+      }
+
+      window.addEventListener("load", () => {
+        new ParticleSystem();
+      });
+
+      function openWhatsApp() {
+        const phoneNumber = "5493512792200";
+        const message = `🎰 ¡Hola! Quiero comenzar a jugar en el casino online premium.
+
+💰 Estoy interesado en:
+• Juegos disponibles y bonos
+• Métodos de pago (Mercado Pago)
+• Información sobre depósitos
+• Bonos de bienvenida
+
+¡Empecemos a ganar! 🎲✨`;
+
+        const encodedMessage = encodeURIComponent(message);
+        const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+
+        window.open(whatsappURL, "_blank");
+        showSuccessMessage();
+      }
+
+      function showSuccessMessage() {
+        const successDiv = document.createElement("div");
+        successDiv.innerHTML = `
+          <div style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: linear-gradient(45deg, #25D366, #128C7E);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(37, 211, 102, 0.5);
+            z-index: 1000;
+            animation: slideIn 0.5s ease-out;
+            font-size: ${window.innerWidth < 768 ? "14px" : "16px"};
+            max-width: calc(100vw - 40px);
+            text-align: center;
+            font-weight: bold;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+          ">
+            ✅ ¡Perfecto! Te redirigimos a WhatsApp
+          </div>
+        `;
+
+        document.body.appendChild(successDiv);
+
+        setTimeout(() => {
+          successDiv.remove();
+        }, 3500);
+      }
+
+      // Efecto de partículas en hover solo en desktop
+      if (window.innerWidth > 768) {
+        let lastParticleTime = 0;
+        document.addEventListener("mousemove", (e) => {
+          const now = Date.now();
+          if (now - lastParticleTime > 100 && Math.random() > 0.92) {
+            lastParticleTime = now;
+            const particle = document.createElement("div");
+            particle.className = "particle";
+            particle.style.width = "6px";
+            particle.style.height = "6px";
+            particle.style.backgroundColor = "#d4af37";
+            particle.style.position = "absolute";
+            particle.style.left = e.clientX - 3 + "px";
+            particle.style.top = e.clientY - 3 + "px";
+            particle.style.borderRadius = "50%";
+            particle.style.pointerEvents = "none";
+            particle.style.animation = "none";
+            particle.style.boxShadow = "0 0 15px #d4af37";
+            particle.style.zIndex = "10";
+
+            document.getElementById("particlesContainer").appendChild(particle);
+
+            let opacity = 0.8;
+            let size = 6;
+            const interval = setInterval(() => {
+              opacity -= 0.05;
+              size += 0.8;
+              particle.style.opacity = opacity;
+              particle.style.width = size + "px";
+              particle.style.height = size + "px";
+              particle.style.left = e.clientX - size / 2 + "px";
+              particle.style.top = e.clientY - size / 2 + "px";
+
+              if (opacity <= 0) {
+                clearInterval(interval);
+                if (particle.parentNode) {
+                  particle.parentNode.removeChild(particle);
+                }
+              }
+            }, 60);
+          }
+        });
+      }
+
+      // Manejo de video de fondo
+      document.addEventListener("DOMContentLoaded", function () {
+        const video = document.getElementById("backgroundVideo");
+
+        // Asegurar que el video se reproduzca
+        video.addEventListener("canplaythrough", function () {
+          video.play().catch(function (error) {
+            console.log("Error al reproducir el video:", error);
+          });
+        });
+
+        // Reiniciar el video cuando termine
+        video.addEventListener("ended", function () {
+          video.currentTime = 0;
+          video.play();
+        });
+      });
+    </script>
+  </body>
+</html>
