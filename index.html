@@ -266,6 +266,7 @@
         position: relative;
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.2);
+        cursor: pointer;
       }
 
       .whatsapp-button::before {
@@ -310,6 +311,15 @@
       .button-text {
         text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
         letter-spacing: 0.5px;
+      }
+
+      .promo-text {
+        color: #ffd700;
+        font-size: clamp(0.9rem, 2.2vw, 1.1rem);
+        font-weight: bold;
+        margin: clamp(15px, 3vw, 20px) 0;
+        text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+        animation: pulse-text 2s ease-in-out infinite;
       }
 
       @keyframes pulse {
@@ -526,6 +536,8 @@
         <span class="button-text">¡Juega ya!</span>
       </a>
 
+      <div class="promo-text">🎁 ¡BONO DE BIENVENIDA DISPONIBLE!</div>
+
       <div class="payment-info">
         <div class="payment-options">
           <span class="payment-badge">
@@ -717,15 +729,12 @@
       function openWhatsApp() {
         const phoneNumber = "5493512792200";
         const message = `🎰 ¡Hola! Quiero comenzar a jugar en el casino online premium.
-
-💰 Estoy interesado en:
-• Juegos disponibles y bonos
-• Métodos de pago (Mercado Pago)
-• Información sobre depósitos
-• Bonos de bienvenida
-
-¡Empecemos a ganar! 🎲✨`;
-
+          💰 Estoy interesado en:
+          • Juegos disponibles y bonos
+          • Métodos de pago (Mercado Pago)
+          • Información sobre depósitos
+          • Bonos de bienvenida
+          ¡Empecemos a ganar! 🎲✨`;
         const encodedMessage = encodeURIComponent(message);
         const whatsappURL = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
 
